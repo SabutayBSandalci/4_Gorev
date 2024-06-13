@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sayısal Loto Oyunu</title>
+</head>
+
+<body>
+    <h2>Sayısal Loto Oyunu</h2>
+
+    <div>
+        <label>Aşağıdaki inputlara tahminlerinizi giriniz:</label><br>
+        <input type="text" class="tahmin-kutusu" oninput="tahminleriDogrula()">
+        <input type="text" class="tahmin-kutusu" oninput="tahminleriDogrula()">
+        <input type="text" class="tahmin-kutusu" oninput="tahminleriDogrula()">
+        <input type="text" class="tahmin-kutusu" oninput="tahminleriDogrula()">
+        <input type="text" class="tahmin-kutusu" oninput="tahminleriDogrula()">
+        <input type="text" class="tahmin-kutusu" oninput="tahminleriDogrula()">
+        <button id="tahmin-gir" onclick="tahminGir()" disabled>Tahmin gir</button>
+    </div>
+
+    <div>
+        <label>Tahminler girildi:</label><br>
+        <button id="kurayi-cek" onclick="kurayiCek()" disabled>Kurayı Çek</button>
+    </div>
+
+    <div>
+        <label>Loto Sayıları:</label><br>
+        <input type="text" class="sonuc-kutusu" readonly>
+        <input type="text" class="sonuc-kutusu" readonly>
+        <input type="text" class="sonuc-kutusu" readonly>
+        <input type="text" class="sonuc-kutusu" readonly>
+        <input type="text" class="sonuc-kutusu" readonly>
+        <input type="text" class="sonuc-kutusu" readonly>
+    </div>
+
+    <div>
+        <label>Bilinen Sayılar: </label>
+        <label id="bilinen-sayilar"></label>
+    </div>
+
+    <div>
+        <label>Kaç Adet Sayı Bilindi: </label>
+        <label id="bilinen-adet"></label>
+    </div>
+
+    <script>
+        function tahminleriDogrula() {
+            const tahminKutulari = document.querySelectorAll('.tahmin-kutusu');
+            const degerler = [];
+            let hepsiGecerli = true;
+
+            tahminKutulari.forEach(kutu => {
+                const deger = parseInt(kutu.value, 10);
+                if (isNaN(deger) || deger < 1 || deger > 49 || degerler.includes(deger)) {
+                    hepsiGecerli = false;
+                    kutu.value = '';
+                } else {
+                    degerler.push(deger);
+                }
+            });
+
+            if (!hepsiGecerli) {
+                alert('1-49 arasında benzersiz sayılar giriniz.');
+            }
+
+            document.getElementById('tahmin-gir').disabled = !hepsiGecerli;
+        }
+
+        function tahminGir() {
+            const tahminKutulari = document.querySelectorAll('.tahmin-kutusu');
+            const degerler = Array.from(tahminKutulari).map(kutu => parseInt(kutu.value, 10));
+
+            degerler.sort((a, b) => a - b).forEach((deger, index) => {
+                tahminKutulari[index].value = deger;
+            });
+
+            document.getElementById('tahmin-gir').disabled = true;
+            document.getElementById('kurayi-cek').disabled = false;
+        }
+
+        function kurayiCek() {
+            const sonucKutulari = document.querySelectorAll('.sonuc-kutusu');
+            const lotoSayilari = benzersizSayilarOlustur(6, 1, 49);
+
+            lotoSayilari.sort((a, b) => a - b).forEach((sayi, index) => {
+                sonucKutulari[index].value = sayi;
+            });
+
+            const tahminSayilari = Array.from(document.querySelectorAll('.tahmin-kutusu')).map(kutu => parseInt(kutu.value, 10));
+            const bilinenSayilar = tahminSayilari.filter(sayi => lotoSayilari.includes(sayi));
+
+            document.getElementById('bilinen-sayilar').innerText = bilinenSayilar.join(', ');
+            document.getElementById('bilinen-adet').innerText = bilinenSayilar.length;
+        }
+
+        function benzersizSayilarOlustur(adet, min, max) {
+            const sayilar = new Set();
+            while (sayilar.size < adet) {
+                sayilar.add(Math.floor(Math.random() * (max - min + 1)) + min);
+            }
+            return Array.from(sayilar);
+        }
+    </script>
+    
+</body>
+</html>

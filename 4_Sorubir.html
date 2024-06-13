@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soru 1</title>
+    <style>
+
+        .sayi {
+            display: inline-block;
+            width: 20px;
+        }
+        .highlight {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+<body>
+
+    <h1>Soru 1:</h1>
+    <p>
+        -Rastgele Sayı Seç butonuna her basıldığında rastgele bir sayı üretilmeli ve üretilen sayıya ait span içerisindeki sayı, kırmızı renkli ve bold olacak şekilde değişmelidir.
+    </p>
+    <div id="cikti">1'den 99'a kadar olan sayıları for döngüsü ile yan yana</div>
+    <button id="sirala" onclick="varSayi()">Sırala</button>
+    <button id="randomSirala" onclick="rastgeleSayi()" disabled>Rastgele Sayı Seç</button>
+
+    <script type="text/javascript">
+        function varSayi() {
+            let cikti = "";
+            for (let i = 1; i <= 99; i++) {
+                cikti += `<span id="num${i}" class="sayi">${i}</span>`;
+                if (i % 10 === 0) {
+                    cikti += "<br>";
+                }
+            }
+            document.getElementById("cikti").innerHTML = cikti;
+            document.getElementById("sirala").disabled = true;
+            document.getElementById("randomSirala").disabled = false;
+        }
+
+        function rastgeleSayi() {
+            const randomSayi = Math.floor(Math.random() * 99) + 1;
+            const spanElement = document.getElementById(`num${randomSayi}`);
+            spanElement.classList.add("highlight");
+        }
+    </script>
+
+</body>
+</html>
